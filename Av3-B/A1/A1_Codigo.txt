@@ -1,0 +1,27 @@
+A)
+
+select actor_id,first_name, last_name from actor where actor_id in (select actor_id from film_actor where film_id in (select film_id from film where title = "TRAP GUYS"));
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+B)
+
+select actor_id,first_name, last_name from actor where actor_id in (select actor_id from film_actor where film_id in (select film_id from film where title = "SCHOOL JACKET"));
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+C)
+
+select * from actor where exists (select film_id from film where title = 'TRAP sGUYS');
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+D)
+
+select distinct first_name from actor where actor_id in (select actor_id from film_actor where film_id in (select film_id from film where title = "TRAP GUYS"));
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+E)
+
+
