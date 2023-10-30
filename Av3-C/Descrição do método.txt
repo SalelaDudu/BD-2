@@ -1,0 +1,6 @@
+Alunos: Eduardo Santos de Assis e Marcos Viana Sena.
+
+
+Descrição:
+
+Optamos pelo Método 2, o qual envolve duas tabelas sendo utilizadas simultaneamente. Inicialmente, tentamos a abordagem com triggers, no entanto, o MySQL não permite que um trigger altere a tabela que o ativou. Portanto, decidimos utilizar processos agendados como alternativa.
