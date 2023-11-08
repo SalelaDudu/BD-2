@@ -1,18 +1,20 @@
 import sqlite3
 
-banco = sqlite3.connect('fogo.bd')
+banco = sqlite3.connect("fogo.bd")
 
 # Definir Cursor
 cursor = banco.cursor()
 
  # Definir os valores que serão registrados no banco
 acao = """
-   INSERT INTO fire(year,state,month,number,date) VALUES (12,"aaaaa","aaaa",12,"asdadsad");
+  SELECT count(year) FROM fire;
     """
-
 
 # Realiza o registro
 cursor.execute(acao)
+
+print(cursor.fetchall())
+
 
 #Fechar conexoes
 cursor.close()    
