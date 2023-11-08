@@ -1,0 +1,7 @@
+Testar lib mysql connector
+
+testar tempo de escrita nas duas tecnologias
+
+testar diferença de tempo com nosql
+
+testar em várias máquinas
