@@ -6,7 +6,7 @@ banco = pymysql.connect(
     host="LocalHost",
     user="root",
     passwd="root",
-    database="forest-fire"
+    database="fogo"
 )
 
 # Definir Cursor
@@ -20,7 +20,7 @@ acao = """
 # Realiza o registro
 n = time.time()
 cursor.execute(acao)
-banco.commit()
+# banco.commit()
 h = time.time() - n
 print(f"tempo: {h}")
 

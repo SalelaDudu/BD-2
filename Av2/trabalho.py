@@ -1,31 +1,29 @@
 import sqlite3
-import pymysql
+import mysql.connector
 import random
 import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Select All
 def selectAll(conector):
 
     # Definir Cursor
     cursor = conector.cursor()
 
-    # Definir os valores que serão registrados no banco
+    # 
     acao = """
         select * from fire;
         """
-
-    # Realiza o registro
+    # 
     cursor.execute(acao)
 
     resultado = cursor.fetchall()
 
-    # print(resultado)
-
     #Fechar conexoes
     cursor.close()    
-    #conector.close()
 
+# Insert
 def insert(conector,registro):
 
     # Definir Cursor
@@ -37,8 +35,8 @@ def insert(conector,registro):
 
     #Fechar conexoes
     cursor.close()    
-    #conector.close()
 
+# Gerador de String
 def genRandomString(tamanho=10):
     chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     string = ''
@@ -46,30 +44,33 @@ def genRandomString(tamanho=10):
         string += random.choice(chars)
     return string
 
+# Gerador de Inteiro
 def genRandomInt(tamanho=100):
     numeros = range(0,tamanho)
     return random.choice(numeros)
 
+# Zera o banco
 def zerarBanco(conector):
     cursor = conector.cursor()
 
-    # Definir os valores que serão registrados no banco
+    #
     acao = """
         delete from fire;
         """
 
-    # Realiza o registro
+    # 
     cursor.execute(acao)
     conector.commit()
     cursor.close()  
 
+#Função Main
 def main():       
 
     graficoMysql = []
     graficoSqlite3 = []
 
-    iteracoes = 100
-    quantidadeRegistros = 100
+    iteracoes = 2
+    quantidadeRegistros = 10
 
     for interacao in range(iteracoes):
 
@@ -83,12 +84,10 @@ def main():
 
             query = f'INSERT INTO fire (year,state,month,number,date) VALUES ({year},"{state}","{month}",{number},"{date}");'
 
-
             insert(conectorMysql,query)
             insert(conectorSqlite3,query)
-
-        conectorMysql.commit()
-        conectorSqlite3.commit()        
+            conectorMysql.commit()
+            conectorSqlite3.commit()        
 
         # teste mysql
         tempoInicialMysql = time.time()
@@ -104,7 +103,7 @@ def main():
         print(f"Tempo Sqlite3 {quantidadeRegistros} registros: {tempoSqlite3}")
         graficoSqlite3.append([quantidadeRegistros,tempoSqlite3])
 
-        quantidadeRegistros += 100
+        quantidadeRegistros *= 10
 
     # grafico mysql
     x = []
@@ -122,7 +121,6 @@ def main():
     xpoints = np.array(x)
     ypoints = np.array(y)
     ax.plot(xpoints, ypoints,color='blue')
-    # plt.savefig('graficoMysql.png')
 
     # grafico sqlite3
     x = []
@@ -133,24 +131,36 @@ def main():
     xpoints = np.array(x)
     ypoints = np.array(y)
     ax.plot(xpoints, ypoints,color='red')
+    print("Gráfico Salvo!")
     plt.savefig('grafico.png')
 
-
-conectorMysql = pymysql.connect(    
+# Conexões com os bancos
+# Banco em MySql
+conectorMysql = mysql.connector.connect(    
     host="LocalHost",
     user="root",
-    passwd="root",
-    database="forest-fire"
+    password="root",
+    database="fogo"
 )   
 
+# Banco em Sql
 conectorSqlite3 = sqlite3.connect('fogo.bd')
-
 
 if __name__ == '__main__':
     zerarBanco(conectorMysql)
     zerarBanco(conectorSqlite3)
 
+    TempoInicialTeste = time.time()
+
     main()
 
     conectorMysql.close()
     conectorSqlite3.close()
+
+    # TempoFinalTeste = time.time()
+
+    # TempoTotalTeste = TempoFinalTeste - TempoInicialTeste    
+
+    # TempoTotalTeste = TempoTotalTeste/60
+
+    # print(f"O Tempo Total decorrido foi: {TempoTotalTeste}")

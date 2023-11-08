@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 banco = sqlite3.connect("fogo.bd")
 
@@ -11,10 +12,14 @@ acao = """
     """
 
 # Realiza o registro
+Tempoinicial = time.time()
+
 cursor.execute(acao)
 
-print(cursor.fetchall())
+TempoFinal= time.time() - Tempoinicial
 
+print("Concluído!")
+print(f"Tempo decorrido: {TempoFinal}")
 
 #Fechar conexoes
 cursor.close()    
