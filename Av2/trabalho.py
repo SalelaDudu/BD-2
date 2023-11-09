@@ -5,6 +5,9 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+iteracoes = 3 # Número de loop interação
+quantidadeRegistros = 10 # Número de registros que será executado
+
 # Select All
 def selectAll(conector):
 
@@ -62,21 +65,15 @@ def zerarBanco(conector):
     conector.commit()
     cursor.close()  
 
-# Função de print
-
-def tempo(tempoInicial,TempoFinal):    
-    if TempoFinal == 0:
-        return (TempoFinal + tempoInicial)
-    else:
-        return TempoFinal
 #Função Main
 def main():       
+    # Gráfico Select
+    graficoMysqlSelect = []
+    graficoSqlite3Select = []
 
-    graficoMysql = []
-    graficoSqlite3 = []
-
-    iteracoes = 2
-    quantidadeRegistros = 10
+    # Gráfico Insert
+    graficoMysqlInsert = []
+    graficoSqlite3Insert = []
 
     for interacao in range(iteracoes):
 
@@ -89,7 +86,7 @@ def main():
             date = genRandomString()
 
             query = f'INSERT INTO fire (year,state,month,number,date) VALUES ({year},"{state}","{month}",{number},"{date}");'
-
+            
             insert(conectorMysql,query)
             insert(conectorSqlite3,query)
 
@@ -99,26 +96,27 @@ def main():
         # teste mysql
         tempoInicialMysql = time.time()
         selectAll(conectorMysql)
-        tempoMysql= time.time() - tempoInicialMysql        
-        graficoMysql.append([quantidadeRegistros,tempo(tempoInicialMysql,tempoMysql)])
+        tempoMysql= (time.time() - tempoInicialMysql)
+        graficoMysqlSelect.append([quantidadeRegistros,tempoMysql])
 
         # teste sqlite3
         tempoInicialSqlite3 = time.time()
         selectAll(conectorSqlite3)
-        tempoSqlite3 = time.time() - tempoInicialSqlite3
-        graficoSqlite3.append([quantidadeRegistros,tempo(tempoInicialSqlite3,tempoSqlite3)])
+        tempoSqlite3 = (time.time() - tempoInicialSqlite3)
+        graficoSqlite3Select.append([quantidadeRegistros,tempoSqlite3])
 
         # print do tempo        
-        print(f"\nTempo Mysql {quantidadeRegistros} registros: {tempo(tempoInicialMysql,tempoMysql)}")
-        print(f"Tempo Sqlite3 {quantidadeRegistros} registros: {tempo(tempoInicialSqlite3,tempoSqlite3)}")
+        print(f"\n\nempo Mysql {quantidadeRegistros} registros: {tempoMysql}")
+        print(f"Tempo Sqlite3 {quantidadeRegistros} registros: {tempoSqlite3}")
         
         # Incremento do valor de iteração
         quantidadeRegistros *= 10
 
+# Gráfico Select    
     # grafico mysql
     x = []
     y = []
-    for i in graficoMysql:
+    for i in graficoMysqlSelect:
         x.append(i[0])
         y.append(i[1])
 
@@ -126,7 +124,7 @@ def main():
 
     ax.set_ylabel('Tempo')
     ax.set_xlabel('Numero de Registros')
-    ax.set_title('Comparação entre MySQL e SQlite3')
+    ax.set_title('Comparação entre MySQL e SQlite3 | Select')
 
     xpoints = np.array(x)
     ypoints = np.array(y)
@@ -135,22 +133,47 @@ def main():
     # grafico sqlite3
     x = []
     y = []
-    for i in graficoSqlite3:
+    for i in graficoSqlite3Select:
         x.append(i[0])
         y.append(i[1])
     xpoints = np.array(x)
     ypoints = np.array(y)
     ax.plot(xpoints, ypoints,color='red')
-    print("Gráfico Salvo!")
-    plt.savefig('grafico.png')
+    plt.savefig('graficoSelect.png')
+
+# Gráfico Insert
+    # grafico mysql
+    x = []
+    y = []
+    for i in graficoMysqlInsert:
+        x.append(i[0])
+        y.append(i[1])
+
+    fig, ax = plt.subplots()
+
+    ax.set_ylabel('Tempo')
+    ax.set_xlabel('Numero de Registros')
+    ax.set_title('Comparação entre MySQL e SQlite3 | insert')
+
+    xpoints = np.array(x)
+    ypoints = np.array(y)
+    ax.plot(xpoints, ypoints,color='blue')
+
+    # grafico sqlite3
+    x = []
+    y = []
+    for i in graficoSqlite3Insert:
+        x.append(i[0])
+        y.append(i[1])
+    xpoints = np.array(x)
+    ypoints = np.array(y)
+    ax.plot(xpoints, ypoints,color='red')
+    plt.savefig('graficoInsert.png')
 
     #Fechar Conexões
 
     conectorMysql.close()
     conectorSqlite3.close()
-
-
-
 
 # Conexões com os bancos
 # Banco em MySql

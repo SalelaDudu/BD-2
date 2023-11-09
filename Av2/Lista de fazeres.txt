@@ -1,7 +1,9 @@
-#- Testar lib mysql connector * Infinitamente melhoria no desempenho de +- 85%
+#- Testar lib mysql connector (Melhor!) FEITO
 
-testar tempo de escrita nas duas tecnologias
+#- testar tempo de escrita nas duas tecnologias | FEITO
 
-testar diferença de tempo com nosql
+* Realizar o teste 10x e gerar gráfico com a média 
 
-testar em várias máquinas
+* testar diferença de tempo com nosql
+
+* testar em várias máquinas
