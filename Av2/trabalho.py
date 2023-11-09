@@ -57,12 +57,18 @@ def zerarBanco(conector):
     acao = """
         delete from fire;
         """
-
     # 
     cursor.execute(acao)
     conector.commit()
     cursor.close()  
 
+# Função de print
+
+def tempo(tempoInicial,TempoFinal):    
+    if TempoFinal == 0:
+        return (TempoFinal + tempoInicial)
+    else:
+        return TempoFinal
 #Função Main
 def main():       
 
@@ -86,23 +92,27 @@ def main():
 
             insert(conectorMysql,query)
             insert(conectorSqlite3,query)
-            conectorMysql.commit()
-            conectorSqlite3.commit()        
+
+        conectorMysql.commit()
+        conectorSqlite3.commit()        
 
         # teste mysql
         tempoInicialMysql = time.time()
         selectAll(conectorMysql)
-        tempoMysql= time.time() - tempoInicialMysql
-        print(f"\n\nTempo Mysql {quantidadeRegistros} registros: {tempoMysql}")
-        graficoMysql.append([quantidadeRegistros,tempoMysql])
+        tempoMysql= time.time() - tempoInicialMysql        
+        graficoMysql.append([quantidadeRegistros,tempo(tempoInicialMysql,tempoMysql)])
 
         # teste sqlite3
         tempoInicialSqlite3 = time.time()
         selectAll(conectorSqlite3)
         tempoSqlite3 = time.time() - tempoInicialSqlite3
-        print(f"Tempo Sqlite3 {quantidadeRegistros} registros: {tempoSqlite3}")
-        graficoSqlite3.append([quantidadeRegistros,tempoSqlite3])
+        graficoSqlite3.append([quantidadeRegistros,tempo(tempoInicialSqlite3,tempoSqlite3)])
 
+        # print do tempo        
+        print(f"\nTempo Mysql {quantidadeRegistros} registros: {tempo(tempoInicialMysql,tempoMysql)}")
+        print(f"Tempo Sqlite3 {quantidadeRegistros} registros: {tempo(tempoInicialSqlite3,tempoSqlite3)}")
+        
+        # Incremento do valor de iteração
         quantidadeRegistros *= 10
 
     # grafico mysql
@@ -134,13 +144,21 @@ def main():
     print("Gráfico Salvo!")
     plt.savefig('grafico.png')
 
+    #Fechar Conexões
+
+    conectorMysql.close()
+    conectorSqlite3.close()
+
+
+
+
 # Conexões com os bancos
 # Banco em MySql
 conectorMysql = mysql.connector.connect(    
     host="LocalHost",
     user="root",
     password="root",
-    database="fogo"
+    database="forest-fire"
 )   
 
 # Banco em Sql
@@ -154,13 +172,10 @@ if __name__ == '__main__':
 
     main()
 
-    conectorMysql.close()
-    conectorSqlite3.close()
+    TempoFinalTeste = time.time()
 
-    # TempoFinalTeste = time.time()
+    TempoTotalTeste = TempoFinalTeste - TempoInicialTeste    
 
-    # TempoTotalTeste = TempoFinalTeste - TempoInicialTeste    
+    TempoTotalTeste = TempoTotalTeste
 
-    # TempoTotalTeste = TempoTotalTeste/60
-
-    # print(f"O Tempo Total decorrido foi: {TempoTotalTeste}")
+    print(f"O Tempo Total decorrido foi: {TempoTotalTeste}")

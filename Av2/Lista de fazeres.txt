@@ -1,4 +1,4 @@
-Testar lib mysql connector
+#- Testar lib mysql connector * Infinitamente melhoria no desempenho de +- 85%
 
 testar tempo de escrita nas duas tecnologias
 
