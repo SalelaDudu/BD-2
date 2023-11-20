@@ -1,0 +1,39 @@
+Fizemos os experimentos em 3 ambientes diferentes:
+
+	MySql workbench
+
+	MySql via terminal( Windows )
+
+	MySql via python
+
+Os testes foram feitos com um banco de dados com 100'001 registros gerados pelo script (está no repositório).
+
+As fotos estão no repositório, em pastas correspondentes ao ambiente de teste
+
+Todos os testes foram feitos 5x levando em consideração que o processamento e a memória RAM do computador estão
+em constante uso e sendo manipulados pelo SO e outros processos que podem estar sendo usados em segundo plano.
+
+
+Teste 1:
+
+testando diferença entre select com campo específico e select com *
+
+select com *:
+
+  no MySql workbench a diferença foi baixa demais para ser registrada pelo sistema ( output 1 -> 5 (f1))
+  
+  no Terminal o tempo decorrido foi 0.08segundos(f1), e a variação foi entre 0.06 e 0.012 nos 5 testes
+
+  no python em 3 dos testes foram tão rápidos que o sistema não registrou, mas no que foram registrados a variação
+  foi de milésimos de segundos(f1)
+
+select com campo especificado:
+
+  no MySql workbench a diferença foi baixa demais para ser registrada pelo sistema ( output 6 -> 10 (f2))
+  porém o último teste deu um tempo maior que o select com *
+
+  no Terminal o tempo decorrido foi 0.05segundos(f2), e a variação foi entre 0.04 e 0.07 nos 5 testes (um pouco mais rápido)
+
+  no python em 4 dos testes foram tão rápidos que o sistema não registrou, mas no que foi a diferença comparada ao select * 
+  é de milésimos, porém mais rápido!
+  
