@@ -1,3 +1,9 @@
+Alunos:
+
+Eduardo Santos de Assis
+Marcos Viana Sena
+
+
 Fizemos os experimentos em 3 ambientes diferentes:
 
 	MySql workbench
