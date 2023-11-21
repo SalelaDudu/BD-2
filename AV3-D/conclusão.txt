@@ -43,3 +43,7 @@ select com campo especificado:
   no python em 4 dos testes foram tão rápidos que o sistema não registrou, mas no que foi a diferença comparada ao select * 
   é de milésimos, porém mais rápido!
   
+
+
+Conclusão:
+  Aparentemente especificar o campo torna a pesquisa mais eficiente!
