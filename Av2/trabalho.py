@@ -100,12 +100,11 @@ def genRandomInt(tamanho=100):
 # Zera o banco
 def zerarBanco(conector):
     cursor = conector.cursor()
-
-    #
+   
     acao = """
         delete from fire;
         """
-    # 
+
     cursor.execute(acao)
     conector.commit()
     cursor.close()  
@@ -113,7 +112,7 @@ def zerarBanco(conector):
 #Função Main
 def main():       
 
-    iteracoes = 4 # Número de loop interação
+    iteracoes = 6 # Número de loop interação
     quantidadeRegistros = 10 # Número de registros que será executado
 
     # Gráfico Select
@@ -349,12 +348,4 @@ if __name__ == '__main__':
     
     TempoInicialTeste = time.time()
 
-    # main()
-
-    TempoFinalTeste = time.time()
-
-    TempoTotalTeste = TempoFinalTeste - TempoInicialTeste    
-
-    TempoTotalTeste = TempoTotalTeste
-
-    print(f"O Tempo Total decorrido foi: {TempoTotalTeste}")
+    main()
