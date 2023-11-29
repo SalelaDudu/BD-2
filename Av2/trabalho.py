@@ -4,6 +4,7 @@ import random
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+
 #criar Grafico
 def grafico(graficoMySql,graficoSqlite,x,y,titulo,desc):
     resetXY(x,y)
@@ -32,22 +33,22 @@ def grafico(graficoMySql,graficoSqlite,x,y,titulo,desc):
     
     ax.legend()
     plt.savefig(f'{titulo}'+'.png')
-    
+
 # Reseta array dos graficos
 def resetXY(x,y):
     x.clear()
     y.clear()
 # Select Especializado    
-def selectField(conector):
+def selectEspecificado(conector):
     # Definir Cursor
     cursor = conector.cursor()
 
-    # 
     acao = """
         select year,state,month,number,date from fire;
-        """
-    # 
+        """        
     cursor.execute(acao)
+    resultado = cursor.fetchall()
+    
 # Select All
 def selectAll(conector):
 
@@ -68,22 +69,15 @@ def selectAll(conector):
 
 def insert(conector,registro):
     cursor = conector.cursor()
-    #year, state , month, number, date = registro
-
-    #query = f'INSERT INTO fire (year,state,month,number,date) VALUES ({year},"{state}","{month}",{number},"{date}");'
-    #print(query)
 
     # Realiza o registro
     cursor.execute(registro)
-    #conector.commit()
-
+    
     #Fechar conexoes
     cursor.close()    
 
 # Insert
 def insertTest(conector,registros):
-
-    #print(registros)
 
     stringRegistros = ''
     for index,i in enumerate(registros):
@@ -95,13 +89,10 @@ def insertTest(conector,registros):
         except:
             pass
 
-    #print(stringRegistros)
-    #return 
     # Definir Cursor
     cursor = conector.cursor()
     query = f'INSERT INTO fire (year,state,month,number,date) VALUES {stringRegistros} ;'
-    #print(query)
-
+    
     # Realiza o registro
     cursor.execute(query)
 
@@ -110,16 +101,13 @@ def insertTest(conector,registros):
 
 def avgTest(conector):
 
-    #print(stringRegistros)
-    #return 
     # Definir Cursor
     cursor = conector.cursor()
     query = 'SELECT avg(number) FROM fire;'
-    #print(query)
 
     # Realiza o registro
     cursor.execute(query)
-    #conector.commit()
+
     resultado = cursor.fetchall()
 
     #Fechar conexoes
@@ -151,8 +139,8 @@ def zerarBanco(conector):
     cursor.close()  
 
 #Função Main
-def main():       
-
+def main():
+    
     iteracoes = 3 # Número de loop interação
     quantidadeRegistros = 10 # Número de registros que será executado
 
@@ -195,7 +183,7 @@ def main():
         tempoMysql= (time.time() - tempoInicialMysql)
         graficoMysqlSelect.append([quantidadeRegistros,tempoMysql])
 
-    # teste sqlite3
+        # teste sqlite3
         tempoInicialSqlite3 = time.time()
         selectAll(conectorSqlite3)
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
@@ -214,6 +202,19 @@ def main():
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
         graficoAvgSQLite.append([quantidadeRegistros,tempoSqlite3])
 
+    # Teste Select Especializado
+        # teste mysql
+        tempoInicialMysql = time.time()
+        selectEspecificado(conectorMysql)
+        tempoMysql = (time.time() - tempoInicialMysql)
+        graficoMysqlSelectEspecializado.append([quantidadeRegistros,tempoMysql])
+
+        # teste sqlite3
+        tempoInicialSqlite3 = time.time()
+        selectEspecificado(conectorSqlite3)
+        tempoSqlite3 = (time.time() - tempoInicialSqlite3)
+        graficoSqlite3SelectEspecializado.append([quantidadeRegistros,tempoSqlite3])
+
         # Incremento do valor de iteração
         quantidadeRegistros *= 10
   
@@ -222,7 +223,12 @@ def main():
     y = []
     grafico(graficoMysqlSelect,graficoSqlite3Select,x,y,'graficoSelectAll','Select(*)')
     
+    # Gráfico Avg
+    grafico(graficoAvgMySQL,graficoAvgSQLite,x,y,'graficoAVG','SELECT AVG()')
 
+    # Gráfico Especializado
+    grafico(graficoMysqlSelectEspecializado,graficoSqlite3SelectEspecializado,x,y,'graficoSelectEspecializado','SELECT (campos)')
+    
     # teste mysql
     tempoInicialMysql = time.time()
     selectAll(conectorMysql)
@@ -234,10 +240,6 @@ def main():
     selectAll(conectorSqlite3)
     tempoSqlite3 = (time.time() - tempoInicialSqlite3)
     graficoSqlite3Select.append([quantidadeRegistros,tempoSqlite3])
-
-    # print do tempo        
-    print(f"\n\nTempo Mysql para selecionar {quantidadeRegistros} registros: {tempoMysql}")
-    print(f"Tempo Sqlite3 para selecionar {quantidadeRegistros} registros: {tempoSqlite3}")
     
     # teste mysql
     tempoInicialMysql = time.time()
@@ -251,9 +253,6 @@ def main():
     tempoSqlite3 = (time.time() - tempoInicialSqlite3)
     graficoAvgSQLite.append([quantidadeRegistros,tempoSqlite3])
 
-    print(f"\n\nTempo Mysql para Avg {quantidadeRegistros} registros: {tempoMysql}")
-    print(f"Tempo Sqlite3 para Avg {quantidadeRegistros} registros: {tempoSqlite3}")
-    
     # testando insert    
     zerarBanco(conectorMysql)
     zerarBanco(conectorSqlite3)
@@ -280,9 +279,6 @@ def main():
         insertTest(conectorSqlite3,registros)
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
         graficoSqlite3Insert.append([quantidadeRegistros,tempoSqlite3])
-
-        print(f"\n\nTempo Mysql para inserir {quantidadeRegistros} registros: {tempoMysql}")
-        print(f"Tempo Sqlite3 para inserir {quantidadeRegistros} registros: {tempoSqlite3}")
 
         quantidadeRegistros *= 10
     #Gráfico Insert        
