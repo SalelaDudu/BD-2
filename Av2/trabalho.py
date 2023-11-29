@@ -4,7 +4,20 @@ import random
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+# Select Especializado
+def selectField(conector,fields):
+        # Definir Cursor
+    cursor = conector.cursor()
 
+    # 
+    acao = f"""
+        select ({fields}) from fire;
+        """
+    # 
+    cursor.execute(acao)
+
+    #Fechar conexoes
+    cursor.close()    
 # Select All
 def selectAll(conector):
 
@@ -36,7 +49,6 @@ def insert(conector,registro):
 
     #Fechar conexoes
     cursor.close()    
-
 
 # Insert
 def insertTest(conector,registros):
@@ -112,7 +124,7 @@ def zerarBanco(conector):
 #Função Main
 def main():       
 
-    iteracoes = 6 # Número de loop interação
+    iteracoes = 4 # Número de loop interação
     quantidadeRegistros = 10 # Número de registros que será executado
 
     # Gráfico Select
@@ -122,6 +134,14 @@ def main():
     # grafico avg
     graficoAvgMySQL = []
     graficoAvgSQLite = []
+    
+    # Gráfico Insert
+    graficoMysqlInsert = []
+    graficoSqlite3Insert = []
+    
+    # Gráfico Select Especializado
+    graficoMysqlSelectEspecializado = []
+    graficoSqlite3SelectEspecializado = []
 
     for interacao in range(iteracoes):
 
@@ -157,8 +177,6 @@ def main():
         print(f"\n\nTempo Mysql para selecionar {quantidadeRegistros} registros: {tempoMysql}")
         print(f"Tempo Sqlite3 para selecionar {quantidadeRegistros} registros: {tempoSqlite3}")
         
-
-
         # teste mysql
         tempoInicialMysql = time.time()
         avgTest(conectorMysql)
@@ -174,13 +192,10 @@ def main():
         print(f"\n\nTempo Mysql para Avg {quantidadeRegistros} registros: {tempoMysql}")
         print(f"Tempo Sqlite3 para Avg {quantidadeRegistros} registros: {tempoSqlite3}")
 
-
         # Incremento do valor de iteração
         quantidadeRegistros *= 10
-
-    
-    
-    # Gráfico Select   
+  
+    # Gráfico Select(*)
 
     # grafico mysql
     x = []
@@ -193,7 +208,7 @@ def main():
 
     ax.set_ylabel('Tempo')
     ax.set_xlabel('Numero de Registros')
-    ax.set_title('Comparação entre MySQL e SQlite3 | Select')
+    ax.set_title('Comparação entre MySQL e SQlite3 | Select(*)')
 
     xpoints = np.array(x)
     ypoints = np.array(y)
@@ -210,14 +225,7 @@ def main():
     ax.plot(xpoints, ypoints,color='red',label='SQLite3')
 
     ax.legend()
-    plt.savefig('graficoSelect.png')
-
-    # Gráfico Insert
-    graficoMysqlInsert = []
-    graficoSqlite3Insert = []
-
-
-
+    plt.savefig('graficoSelectall.png')
 
     # testando insert    
     zerarBanco(conectorMysql)
@@ -253,7 +261,6 @@ def main():
 
         quantidadeRegistros *= 10
 
-
     x = []
     y = []
     for i in graficoMysqlInsert:
@@ -285,9 +292,6 @@ def main():
     ax.plot(xpoints, ypoints,color='red',label='SQLite3')
     ax.legend()
     plt.savefig('graficoInsert.png')
-    
-
-
 
     #Teste da media
     x = []
@@ -322,8 +326,17 @@ def main():
     ax.legend()
     plt.savefig('graficoAvg.png')
 
+    #Teste do select especializado
+    #Grafico MySql
+    fig, ax = plt.subplots()
 
+    ax.set_ylabel('Tempo')
+    ax.set_xlabel('Numero de Registros')
+    ax.set_title('Comparação entre MySQL e SQlite3 | Select()')
 
+    xpoints = np.array(x)
+    ypoints = np.array(y)
+    ax.plot(xpoints, ypoints,color='blue',label='MySQL')
 
 
     #Fechar Conexões
@@ -345,7 +358,5 @@ conectorSqlite3 = sqlite3.connect('fogo.bd')
 if __name__ == '__main__':
     zerarBanco(conectorMysql)
     zerarBanco(conectorSqlite3)
-    
-    TempoInicialTeste = time.time()
 
     main()
