@@ -5,7 +5,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-iteracoes = 6
+iteracoes = 4
 #criar Grafico
 def grafico(graficoMySql,graficoSqlite,x,y,titulo,desc):
 
@@ -132,17 +132,28 @@ def zerarBanco(conector):
     conector.commit()
     cursor.close()  
 
-# Popular Banco
-def popularBanco(iteracoes,n_registros):
+#Função Main
+def main():
     registros = []
     x = []
     y = []
     graficoMysqlInsert = []
     graficoSqlite3Insert = []
-    # Gráfico Insert
-    
-    for interacao in range(iteracoes):
-        for i in range(n_registros):                        
+    # Gráfico Select
+    graficoMysqlSelect = []
+    graficoSqlite3Select = []
+
+    # grafico avg
+    graficoAvgMySQL = []
+    graficoAvgSQLite = []
+        
+    # Gráfico Select Especializado
+    graficoMysqlSelectEspecializado = []
+    graficoSqlite3SelectEspecializado = []
+    # Número de loop interação
+    quantidadeRegistros = 10
+    for i in range(iteracoes):
+        for interacao in range(quantidadeRegistros):                       
             year = genRandomInt()
             state = genRandomString()
             month = genRandomString()
@@ -153,41 +164,22 @@ def popularBanco(iteracoes,n_registros):
         tempoInicialMysql = time.time()
         insert(conectorMysql,registros)
         tempoMysql= (time.time() - tempoInicialMysql)
-        graficoMysqlInsert.append([n_registros,tempoMysql])
+        graficoMysqlInsert.append([quantidadeRegistros,tempoMysql])
 
         # teste sqlite3
         tempoInicialSqlite3 = time.time()
         insert(conectorSqlite3,registros)
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
-        graficoSqlite3Insert.append([n_registros,tempoSqlite3])
+        graficoSqlite3Insert.append([quantidadeRegistros,tempoSqlite3])
         
         conectorMysql.commit()
         conectorSqlite3.commit()        
-        n_registros *= 10
-        # Gráfico Insert
+        quantidadeRegistros *= 10
     
-    grafico(graficoMysqlInsert,graficoSqlite3Insert,x,y,'graficoInsert','Insert')
+        grafico(graficoMysqlInsert,graficoSqlite3Insert,x,y,'graficoInsert','Insert')    
         
-#Função Main
-def main():
-    
-    # Número de loop interação
-    quantidadeRegistros = 10**iteracoes 
-    for i in range(iteracoes):
-        # Gráfico Select
-        graficoMysqlSelect = []
-        graficoSqlite3Select = []
-
-        # grafico avg
-        graficoAvgMySQL = []
-        graficoAvgSQLite = []
-            
-        # Gráfico Select Especializado
-        graficoMysqlSelectEspecializado = []
-        graficoSqlite3SelectEspecializado = []
-
         # Teste Select(*)
-        # teste mysql
+        # teste mysql    
         tempoInicialMysql = time.time()
         selectAll(conectorMysql)
         tempoMysql= (time.time() - tempoInicialMysql)
@@ -198,8 +190,8 @@ def main():
         selectAll(conectorSqlite3)
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
         graficoSqlite3Select.append([quantidadeRegistros,tempoSqlite3])
-        
-    # Teste Avg        
+            
+        # Teste Avg        
         # teste mysql
         tempoInicialMysql = time.time()
         avgTest(conectorMysql)
@@ -212,7 +204,7 @@ def main():
         tempoSqlite3 = (time.time() - tempoInicialSqlite3)
         graficoAvgSQLite.append([quantidadeRegistros,tempoSqlite3])
 
-    # Teste Select Especializado
+        # Teste Select Especializado
         # teste mysql
         tempoInicialMysql = time.time()
         selectEspecificado(conectorMysql)
