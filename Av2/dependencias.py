@@ -5,7 +5,8 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-iteracoes = 4
+# Valor que  define potencia de 10 que o teste irá rodar
+iteracoes = 6
 #criar Grafico
 def grafico(graficoMySql,graficoSqlite,x,y,titulo,desc):
 

@@ -5,4 +5,4 @@ if __name__ == '__main__':
     zerarBanco(conectorSqlite3)
 
     main()
-    print("Feito!")
+    print("Feito! 1 ")
